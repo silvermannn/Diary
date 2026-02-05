@@ -80,7 +80,7 @@
     <item>
      <widget class="QTabWidget" name="tabsRegistered">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QSplitter" name="tabExercises">
        <property name="sizePolicy">
@@ -136,7 +136,7 @@
          <bool>false</bool>
         </attribute>
         <attribute name="verticalHeaderDefaultSectionSize">
-         <number>21</number>
+         <number>24</number>
         </attribute>
         <attribute name="verticalHeaderHighlightSections">
          <bool>false</bool>
@@ -200,7 +200,7 @@
          <bool>false</bool>
         </attribute>
         <attribute name="verticalHeaderDefaultSectionSize">
-         <number>21</number>
+         <number>24</number>
         </attribute>
         <attribute name="verticalHeaderHighlightSections">
          <bool>false</bool>
@@ -277,7 +277,7 @@
          <bool>false</bool>
         </attribute>
         <attribute name="verticalHeaderDefaultSectionSize">
-         <number>21</number>
+         <number>24</number>
         </attribute>
         <attribute name="verticalHeaderHighlightSections">
          <bool>false</bool>
@@ -339,7 +339,7 @@
          <bool>false</bool>
         </attribute>
         <attribute name="verticalHeaderDefaultSectionSize">
-         <number>21</number>
+         <number>24</number>
         </attribute>
         <attribute name="verticalHeaderHighlightSections">
          <bool>false</bool>
@@ -367,7 +367,7 @@
      <x>0</x>
      <y>0</y>
      <width>1250</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

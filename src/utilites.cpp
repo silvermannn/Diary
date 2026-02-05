@@ -1,8 +1,8 @@
 #include "utilites.h"
 
-#include <QRegExpValidator>
+#include <QRegularExpressionValidator>
 
 QValidator* createUniversalDoubleValidator()
 {
-	return new QRegExpValidator(QRegExp("\\d+([,.]\\d+)?"));
+    return new QRegularExpressionValidator(QRegularExpression("\\d+([,.]\\d+)?"));
 }
