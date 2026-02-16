@@ -19,8 +19,9 @@ public:
 public slots:
 	void dateChanged(QDate date);
 	void exerciseSelectionChanged();
-	void foodSelectionChanged();
-	void onAddExecise();
+    void foodSelectionChanged();
+    void parameterVisibilityChanged();
+    void onAddExecise();
 	void onAddFoodIntake();
 	void onEditFoodIntake(int row,int col);
     void onAddParameter();

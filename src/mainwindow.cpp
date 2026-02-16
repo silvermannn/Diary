@@ -57,6 +57,11 @@ void MainWindow::foodSelectionChanged()
 	updateFoodDetails(getActualDate(), id);
 }
 
+void MainWindow::parameterVisibilityChanged()
+{
+    updateParameter(getActualDate());
+}
+
 void MainWindow::onAddExecise()
 {
 	OneExecutionDialog dlg(nullptr, _db, getActualDate());
@@ -161,7 +166,8 @@ void MainWindow::updateFood(QDate date)
 
 void MainWindow::updateParameter(QDate date)
 {
-    DayParameters ps = _db.fetchDayParameters(date);
+    QCheckBox* showAll = findChild<QCheckBox*>("chkShowNonMainParameters");
+    DayParameters ps = _db.fetchDayParameters(date, showAll->isChecked());
     QTableWidget* table = findChild<QTableWidget*>("tableParameter");
     table->setRowCount(ps.count());
     for (int i = 0; i < ps.count(); ++i)

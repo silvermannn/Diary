@@ -237,18 +237,17 @@ DayFoods Database::fetchDayFood(const QDate date)
 	return result;
 }
 
-DayParameters Database::fetchDayParameters(const QDate date)
+DayParameters Database::fetchDayParameters(const QDate date, bool showAll)
 {
-    qDebug() << "fetchDayParameters " << date << ", " << toDelphiDate(date);
     DayParameters result;
     QSqlQuery query;
     query.prepare(SelectDiaryDayTrackEvent);
     query.bindValue(":date", toDelphiDate(date));
+    query.bindValue(":showAll", showAll);
     query.exec();
     while(query.next())
     {
         DayParameter day;
-        qDebug() << query.value(0).toString() << ", " << query.value(1).toString() << ", " << query.value(2).toString();
         day.id = query.value(0).toInt();
         day.name = query.value(1).toString();
         day.value = query.value(2).toString();

@@ -170,6 +170,7 @@ static const char SelectDiaryDayTrackEvent[] = "SELECT parameter.id AS id, param
   "ORDER BY tracking.trDate DESC LIMIT 1), " \
   "parameter.main AS main " \
   "FROM parameter " \
+  "WHERE parameter.main=1 OR parameter.main=:showAll " \
   "ORDER BY parameter.name";
 static const char InsertTrackEvent[] = "INSERT INTO tracking (trDate, idParameter, value, comments) VALUES (:date, :idParameter, :value, :comments)";
 static const char SelectParameterSeries[] = "SELECT t1.trDate, AVG(t2.value) " \

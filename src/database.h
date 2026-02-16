@@ -39,7 +39,7 @@ public:
 	DayExercises fetchDayExercises(const QDate date);
 	DayExerciseItems fetchDayExerciseItems(const QDate date, int id, QString& name, QString& comment);
 	DayFoods fetchDayFood(const QDate Date);
-    DayParameters fetchDayParameters(const QDate date);
+    DayParameters fetchDayParameters(const QDate date, bool showAll);
 
 	void FetchNote(const QDate Date, QString& Note);
 	void AddNote(const QDate Date, const QString& Note);

@@ -46,12 +46,6 @@
         <height>0</height>
        </size>
       </property>
-      <property name="maximumSize">
-       <size>
-        <width>248</width>
-        <height>16777215</height>
-       </size>
-      </property>
       <property name="frameShape">
        <enum>QFrame::Panel</enum>
       </property>
@@ -80,7 +74,7 @@
     <item>
      <widget class="QTabWidget" name="tabsRegistered">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QSplitter" name="tabExercises">
        <property name="sizePolicy">
@@ -304,6 +298,12 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
@@ -313,6 +313,36 @@
        <attribute name="title">
         <string>Параметры</string>
        </attribute>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>20</height>
+         </size>
+        </property>
+        <widget class="QCheckBox" name="chkShowNonMainParameters">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>341</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Показывать только главные параметры</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </widget>
        <widget class="QTableWidget" name="tableParameter">
         <property name="minimumSize">
          <size>
@@ -549,12 +579,29 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>chkShowNonMainParameters</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>parameterVisibilityChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>633</x>
+     <y>69</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>624</x>
+     <y>349</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>dateChanged(QDate)</slot>
   <slot>exerciseSelectionChanged()</slot>
   <slot>onAddExecise()</slot>
   <slot>foodSelectionChanged()</slot>
+  <slot>parameterVisibilityChanged()</slot>
   <slot>onAddFoodIntake()</slot>
   <slot>onEditFoodIntake(int,int)</slot>
   <slot>onAddParameter()</slot>
