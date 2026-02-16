@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "oneexecutiondialog.h"
 #include "onefoodintakedialog.h"
+#include "oneparameterdialog.h"
 #include "ui_mainwindow.h"
 
 #include "progresslikepainter.h"
@@ -67,7 +68,8 @@ void MainWindow::onAddExecise()
 
 void MainWindow::onAddFoodIntake()
 {
-	OneFoodIntakeDialog dlg(nullptr, _db, getActualDate(), -1);
+    qDebug() << "onAddFoodIntake";
+    OneFoodIntakeDialog dlg(nullptr, _db, getActualDate(), -1);
 	if (dlg.exec() == QDialog::Accepted)
 	{
 		updateFood(getActualDate());
@@ -85,6 +87,15 @@ void MainWindow::onEditFoodIntake(int row, int)
 	{
 		updateFood(getActualDate());
 	}
+}
+
+void MainWindow::onAddParameter()
+{
+    OneParameterDialog dlg(nullptr, _db, getActualDate(), -1);
+    if (dlg.exec() == QDialog::Accepted)
+    {
+        updateParameter(getActualDate());
+    }
 }
 
 void MainWindow::updateExercises(QDate date)
@@ -148,6 +159,22 @@ void MainWindow::updateFood(QDate date)
 	foodSelectionChanged();
 }
 
+void MainWindow::updateParameter(QDate date)
+{
+    DayParameters ps = _db.fetchDayParameters(date);
+    QTableWidget* table = findChild<QTableWidget*>("tableParameter");
+    table->setRowCount(ps.count());
+    for (int i = 0; i < ps.count(); ++i)
+    {
+        const DayParameter& d = ps.at(i);
+        QTableWidgetItem* pItem = new QTableWidgetItem(d.name);
+        pItem->setData(Qt::UserRole, d.id);
+        table->setItem(i, 0, pItem);
+        table->setItem(i, 1, new QTableWidgetItem(d.value));
+        //table->setItem(i, 2, new QTableWidgetItem(d.comments));
+    }
+}
+
 void MainWindow::updateFoodDetails(QDate date, int id)
 {
 	QString selected = false ? (QString::number(id)): "";
@@ -201,8 +228,8 @@ QDate MainWindow::getActualDate()
 void MainWindow::initTableWidgets()
 {
 	initTableWidgetColumns("tableExcercises", {"Наименование", "Количество всего", "Среднее"});
-	initTableWidgetColumns("tableExerciseDetails", {"Количество", "Комментарий"});
-	IdToString parameters = _db.fetchParameterPageList();
+    initTableWidgetColumns("tableExerciseDetails", {"Количество", "Комментарий"});
+    IdToString parameters = _db.fetchParameterPageList();
 	QTabWidget* foodTabs = findChild<QTabWidget*>("tabsFoodContent");
 	for (IdToString::const_iterator i = parameters.begin(); i != parameters.end(); ++i)
 	{
@@ -217,6 +244,7 @@ void MainWindow::initTableWidgets()
 		initTableWidgetColumns(tableName, {"Наименование", "Количество"});
 	}
 	initTableWidgetColumns("tableFoodIncome", {"Наименование", "Количество"});
+    initTableWidgetColumns("tableParameter", {"Параметр", "Значение"});
 }
 
 void MainWindow::initTableWidgetColumns(const QString& name, const QStringList& headerLabels)
@@ -241,8 +269,9 @@ void MainWindow::saveTableWidgetStates()
 	_db.beginTransaction();
 	saveTableWidgetColumns("tableExcercises");
 	saveTableWidgetColumns("tableExerciseDetails");
-	saveTableWidgetColumns("tableFoodIncome");
-	QTabWidget* foodTabs = findChild<QTabWidget*>("tabsFoodContent");
+    saveTableWidgetColumns("tableFoodIncome");
+    saveTableWidgetColumns("tableParameter");
+    QTabWidget* foodTabs = findChild<QTabWidget*>("tabsFoodContent");
 	for (int i = 0; i < foodTabs->count(); ++i)
 	{
 		QTableWidget* table = qobject_cast<QTableWidget*>(foodTabs->widget(i));
@@ -269,7 +298,8 @@ void MainWindow::closeEvent(QCloseEvent* /* event */)
 
 void MainWindow::dateChanged(QDate date)
 {
-    //qDebug() << "Date changed to " << date;
+    qDebug() << "Date changed to " << date;
 	updateExercises(date);
-	updateFood(date);
+    updateFood(date);
+    updateParameter(date);
 }

@@ -1,4 +1,4 @@
-#pragma once
+    #pragma once
 
 #include <QMainWindow>
 
@@ -23,6 +23,7 @@ public slots:
 	void onAddExecise();
 	void onAddFoodIntake();
 	void onEditFoodIntake(int row,int col);
+    void onAddParameter();
 
 private:
 	Database _db;
@@ -31,6 +32,7 @@ private:
 	void updateExercises(QDate date);
 	void updateFood(QDate date);
 	void updateFoodDetails(QDate date, int id);
+    void updateParameter(QDate date);
 
 	QDate getActualDate();
 

@@ -132,6 +132,34 @@ int Database::addExecution(const QDate date, int idEx, double param0, double par
 	return getLastInsertedId();
 }
 
+IdToString Database::fetchParametersList(bool all)
+{
+    qDebug() << "fetchParametersList";
+    IdToString result;
+    QSqlQuery query;
+    query.prepare(SelectParametersList);
+    query.bindValue(":active", all?0:1);
+    query.exec();
+    while(query.next())
+    {
+        result.insert(query.value(0).toInt(), query.value(1).toString());
+    }
+    return result;
+}
+
+int Database::addParameterValue(const QDate date, int idParameter, double value, const QString &comment)
+{
+    QSqlQuery query, queryId;
+    query.prepare(InsertTrackEvent);
+    query.bindValue(":date", toDelphiDate(date));
+    query.bindValue(":idParameter", idParameter);
+    query.bindValue(":value", value);
+    query.bindValue(":comments", comment);
+    query.exec();
+    return getLastInsertedId();
+
+}
+
 DayExercises Database::fetchDayExercises(const QDate date)
 {
 	DayExercises result;
@@ -207,6 +235,27 @@ DayFoods Database::fetchDayFood(const QDate date)
 		result.append(dayFood);
 	}
 	return result;
+}
+
+DayParameters Database::fetchDayParameters(const QDate date)
+{
+    qDebug() << "fetchDayParameters " << date << ", " << toDelphiDate(date);
+    DayParameters result;
+    QSqlQuery query;
+    query.prepare(SelectDiaryDayTrackEvent);
+    query.bindValue(":date", toDelphiDate(date));
+    query.exec();
+    while(query.next())
+    {
+        DayParameter day;
+        qDebug() << query.value(0).toString() << ", " << query.value(1).toString() << ", " << query.value(2).toString();
+        day.id = query.value(0).toInt();
+        day.name = query.value(1).toString();
+        day.value = query.value(2).toString();
+        result.append(day);
+    }
+    return result;
+
 }
 
 bool Database::fetchFoodIntake(int id, QDate& date, int& idFood, double& amount, QString& comment)

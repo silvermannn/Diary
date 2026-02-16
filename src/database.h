@@ -30,16 +30,16 @@ public:
 	void fetchExInfo(int id, QStringList& paramNames, QStringList& paramUnits, QString& comment, QString& lastComment);
 	int addExecution(const QDate date, int idEx, double param0, double param1, double param2, const QString& comment);
 
-	QStringList FetchParametersList(bool all);
+    IdToString fetchParametersList(bool all);
 	void FetchParameterInfo(int Id, QString& ParamName);
-	void AddTrackEvent(const QDate Date, int IdParameter, double Value, const QString& Comment);
+    int addParameterValue(const QDate date, int idParameter, double value, const QString& comment);
 	void FetchParameterSerie(QDate DateBegin, QDate DateEnd, int ParameterId, int DaysForPoint, QStringList& Series);
 
     uint fetchDayAverallTimes(const QDate date);
 	DayExercises fetchDayExercises(const QDate date);
 	DayExerciseItems fetchDayExerciseItems(const QDate date, int id, QString& name, QString& comment);
 	DayFoods fetchDayFood(const QDate Date);
-	void FetchDayParameters(const QDate Date, DayOthers& RetDO);
+    DayParameters fetchDayParameters(const QDate date);
 
 	void FetchNote(const QDate Date, QString& Note);
 	void AddNote(const QDate Date, const QString& Note);

@@ -1,6 +1,4 @@
-QT       += core gui sql
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT       += core gui sql widgets
 
 CONFIG += c++11
 
@@ -21,6 +19,7 @@ SOURCES += \
     mainwindow.cpp \
     oneexecutiondialog.cpp \
     onefoodintakedialog.cpp \
+    oneparameterdialog.cpp \
     progresslikepainter.cpp \
     utilites.cpp
 
@@ -30,6 +29,7 @@ HEADERS += \
     mainwindow.h \
     oneexecutiondialog.h \
     onefoodintakedialog.h \
+    oneparameterdialog.h \
     progresslikepainter.h \
     queries.h \
     utilites.h
@@ -37,7 +37,8 @@ HEADERS += \
 FORMS += \
     mainwindow.ui \
     oneexecutiondialog.ui \
-    onefoodintakedialog.ui
+    onefoodintakedialog.ui \
+    oneparameterdialog.ui
 
 RC_ICONS = app.ico
 

@@ -109,3 +109,12 @@ struct ReportVar
 typedef QList<ReportVar> ReportVars;
 typedef QList<QStringList> StringMatrix;
 
+struct DayParameter
+{
+    int id;
+    QString name;
+    QString value;
+    QString comments;
+};
+
+typedef QList<DayParameter> DayParameters;

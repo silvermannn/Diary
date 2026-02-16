@@ -298,18 +298,27 @@
        </widget>
       </widget>
       <widget class="QSplitter" name="tabTracking">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="childrenCollapsible">
+        <bool>false</bool>
        </property>
        <attribute name="title">
         <string>Параметры</string>
        </attribute>
-       <widget class="QTableWidget" name="tableTracking">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+       <widget class="QTableWidget" name="tableParameter">
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>0</height>
+         </size>
         </property>
         <property name="editTriggers">
          <set>QAbstractItemView::NoEditTriggers</set>
@@ -327,7 +336,7 @@
          <bool>true</bool>
         </property>
         <property name="columnCount">
-         <number>3</number>
+         <number>2</number>
         </property>
         <attribute name="horizontalHeaderDefaultSectionSize">
          <number>150</number>
@@ -344,7 +353,6 @@
         <attribute name="verticalHeaderHighlightSections">
          <bool>false</bool>
         </attribute>
-        <column/>
         <column/>
         <column/>
        </widget>
@@ -382,8 +390,15 @@
     </property>
     <addaction name="actionAddFoodIntake"/>
    </widget>
+   <widget class="QMenu" name="menuParameters">
+    <property name="title">
+     <string>Параметры</string>
+    </property>
+    <addaction name="actionAddParameter"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menu"/>
+   <addaction name="menuParameters"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionAddExercise">
@@ -403,6 +418,17 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+F</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionAddParameter">
+   <property name="text">
+    <string>Добавить значение параметра</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
    </property>
    <property name="shortcutContext">
     <enum>Qt::ApplicationShortcut</enum>
@@ -507,6 +533,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionAddParameter</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>onAddParameter()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>624</x>
+     <y>349</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>dateChanged(QDate)</slot>
@@ -515,5 +557,6 @@
   <slot>foodSelectionChanged()</slot>
   <slot>onAddFoodIntake()</slot>
   <slot>onEditFoodIntake(int,int)</slot>
+  <slot>onAddParameter()</slot>
  </slots>
 </ui>
