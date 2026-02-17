@@ -107,15 +107,15 @@ static const char SelectExList[] = "SELECT subExercise.id AS id, exercise.name |
   "ORDER BY exercise.line, exercise.name, subExercise.name";
 static const char SelectExInfo[] = "SELECT paramsCount, param0Name, param1Name, param2Name," \
     " u0.shortName AS unit0, u1.shortName AS unit1, u2.shortName AS unit2," \
-    " (exercise.comments || X'0A' || subExercise.comments) AS comments, " \
-    " (SELECT diary.comments FROM diary WHERE diary.idExercise=:id AND diary.comments IS NOT NULL ORDER BY diary.exDate DESC LIMIT 1) AS lastCcomments " \
+    " (exercise.comments || X'0A' || subExercise.comments) AS comments " \
     "FROM exercise " \
     "JOIN subExercise ON exercise.id=subExercise.idExercise " \
     "LEFT JOIN unit AS u0 ON u0.id=subExercise.idUnit0 " \
     "LEFT JOIN unit AS u1 ON u1.id=subExercise.idUnit1 " \
     "LEFT JOIN unit AS u2 ON u2.id=subExercise.idUnit2 " \
     "WHERE subExercise.id=:id";
-static const char SelectExComments[] = "SELECT DISTINCT TRIM(diary.comments) FROM diary WHERE diary.idExercise=:id ORDER BY diary.exDate DESC LIMIT 50";
+static const char SelectExComments[] = "SELECT DISTINCT TRIM(diary.comments) FROM diary WHERE diary.idExercise=:id AND diary.comments IS NOT NULL ORDER BY diary.exDate DESC LIMIT 50";
+static const char SelectExLastUsage[] = "SELECT TRIM(diary.comments), diary.param0, diary.param1, diary.param2 FROM diary WHERE diary.idExercise=:id ORDER BY diary.exDate DESC LIMIT 1";
 
 static const char SelectDiaryDayExs[] = "SELECT subExercise.id AS id, exercise.name || ': ' || subExercise.name AS exerciseName, " \
   "GROUP_CONCAT((diary.param0 || CASE diary.param1 WHEN 0 THEN '' ELSE ('/' || diary.param1) END || CASE diary.param2 WHEN 0 THEN '' ELSE ('/' || diary.param2) END), '+') || ' ' || " \
@@ -184,13 +184,13 @@ static const char InsertOneNote[] = "INSERT OR REPLACE INTO notes (noteDate, not
 static const char SelectOneNote[] = "SELECT note FROM notes WHERE noteDate=:date";
 
 static const char SelectFoodDay[] = "SELECT foodIntake.id AS id, food.name AS foodName, " \
-	"foodIntake.amount || ' ' || unit.shortName, " \
-	"foodIntake.comments AS comments " \
-	"FROM foodIntake " \
-	"JOIN food ON foodIntake.idFood=food.id " \
-	"LEFT JOIN unit ON food.idUnit=unit.id " \
-	"WHERE foodIntake.fiDate=:date " \
-	"ORDER BY food.name";
+    "foodIntake.amount || ' ' || unit.shortName, " \
+    "foodIntake.comments AS comments " \
+    "FROM foodIntake " \
+    "JOIN food ON foodIntake.idFood=food.id " \
+    "LEFT JOIN unit ON food.idUnit=unit.id " \
+    "WHERE foodIntake.fiDate=:date " \
+    "ORDER BY food.name";
 
 static const char SelectFoodIntake[] = "SELECT foodIntake.fiDate, foodIntake.idFood, foodIntake.amount, foodIntake.comments AS comments " \
   "FROM foodIntake WHERE foodIntake.id=:id";
@@ -204,18 +204,18 @@ static const char DeleteFoodIntakeById[] = "DELETE FROM foodIntake WHERE foodInt
 static const char SelectFoodList[] = "SELECT food.id AS id, food.name AS name FROM food WHERE food.active=:active OR food.active=1 ORDER BY food.name";
 
 static const char SelectFoodInfo[] = "SELECT unit.shortName AS unitName, food.comments AS comments " \
-	"FROM food " \
-	"LEFT JOIN unit ON food.idUnit=unit.id " \
-	"WHERE food.id=:id";
+    "FROM food " \
+    "LEFT JOIN unit ON food.idUnit=unit.id " \
+    "WHERE food.id=:id";
 
 static const char SelectFoodItemInfoById[] = "SELECT food.name, food.active, food.defaultAmount, food.idUnit, food.comments AS comments " \
-	"FROM food " \
-	"WHERE food.id=:id";
+    "FROM food " \
+    "WHERE food.id=:id";
 
 static const char SelectFoodItemInfoByIntake[] = "SELECT food.id, food.name, food.active, food.defaultAmount, food.idUnit, food.comments AS comments " \
-	"FROM food " \
-	"JOIN foodIntake ON foodIntake.idFood=food.id " \
-	"WHERE foodIntake.id=:id";
+    "FROM food " \
+    "JOIN foodIntake ON foodIntake.idFood=food.id " \
+    "WHERE foodIntake.id=:id";
 
 static const char InsertFoodInfo[] = "INSERT INTO food (name, active, defaultAmount, idUnit, comments) VALUES (:name, :active, :defaultAmount, :idUnit, :comments)";
 
@@ -226,50 +226,50 @@ static const char UpdateFoodContent[] = "INSERT OR REPLACE INTO foodContent (idF
 static const char DeleteFoodContent[] = "DELETE FROM foodContent WHERE idFood=:idFood";
 
 static const char SelectFoodItemContent[] = "SELECT foodParameter.id, foodParameter.name, foodContent.amount, unit.shortName AS unitName, foodParameter.main AS main " \
-	"FROM foodParameter " \
-	"LEFT JOIN foodContent ON foodParameter.id=foodContent.idParameter AND foodContent.idFood=:id " \
-	"LEFT JOIN unit ON foodParameter.idUnit=unit.id " \
-	"ORDER BY IFNULL(foodParameter.idSuperParameter, foodParameter.id), foodParameter.idSuperParameter, foodParameter.name";
+    "FROM foodParameter " \
+    "LEFT JOIN foodContent ON foodParameter.id=foodContent.idParameter AND foodContent.idFood=:id " \
+    "LEFT JOIN unit ON foodParameter.idUnit=unit.id " \
+    "ORDER BY IFNULL(foodParameter.idSuperParameter, foodParameter.id), foodParameter.idSuperParameter, foodParameter.name";
 
 static const char SelectUnitList[] = "SELECT unit.id AS id, unit.name AS name FROM unit ORDER BY unit.name";
 
 static const char SelectParameterPageList[] = "SELECT foodParameterPage.id AS id, foodParameterPage.name AS name FROM foodParameterPage ORDER BY foodParameterPage.id";
 
 static const char SelectFoodPageDay[] = "SELECT foodParameter.id AS id, " \
-	"foodParameter.idSuperParameter AS idParent, " \
-	"foodParameter.name AS name, " \
-	"foodParameter.targetMin AS targetMin, " \
-	"foodParameter.targetMax AS targetMax, " \
-	"SUM(foodContent.amount * foodIntake.amount / food.defaultAmount) AS amount, " \
-	"unit.shortName AS unitName, " \
-	"foodParameter.comments AS comments, " \
-	"foodParameter.idPage AS idPage, " \
-	"foodParameter.main AS main " \
-	"FROM foodParameter " \
-	"LEFT JOIN foodContent ON foodContent.idParameter=foodParameter.id " \
-	"LEFT JOIN food ON food.id=foodContent.idFood " \
-	"LEFT JOIN foodIntake ON foodContent.idFood=foodIntake.idFood AND foodIntake.fiDate=:date " \
-	"LEFT JOIN unit ON foodParameter.idUnit=unit.id " \
-	"GROUP BY foodParameter.id " \
-	"ORDER BY IFNULL(foodParameter.idSuperParameter, foodParameter.id), foodParameter.idSuperParameter, foodParameter.name";
+    "foodParameter.idSuperParameter AS idParent, " \
+    "foodParameter.name AS name, " \
+    "foodParameter.targetMin AS targetMin, " \
+    "foodParameter.targetMax AS targetMax, " \
+    "SUM(foodContent.amount * foodIntake.amount / food.defaultAmount) AS amount, " \
+    "unit.shortName AS unitName, " \
+    "foodParameter.comments AS comments, " \
+    "foodParameter.idPage AS idPage, " \
+    "foodParameter.main AS main " \
+    "FROM foodParameter " \
+    "LEFT JOIN foodContent ON foodContent.idParameter=foodParameter.id " \
+    "LEFT JOIN food ON food.id=foodContent.idFood " \
+    "LEFT JOIN foodIntake ON foodContent.idFood=foodIntake.idFood AND foodIntake.fiDate=:date " \
+    "LEFT JOIN unit ON foodParameter.idUnit=unit.id " \
+    "GROUP BY foodParameter.id " \
+    "ORDER BY IFNULL(foodParameter.idSuperParameter, foodParameter.id), foodParameter.idSuperParameter, foodParameter.name";
 
 static const char SelectSelectedFoodPageDay[] = "SELECT foodParameter.id AS id, " \
-	"foodParameter.idSuperParameter AS idParent, " \
-	"foodParameter.name AS name, " \
-	"foodParameter.targetMin AS targetMin, " \
-	"foodParameter.targetMax AS targetMax, " \
-	"SUM(foodContent.amount * foodIntake.amount / food.defaultAmount) AS amount, " \
-	"unit.shortName AS unitName, " \
-	"foodParameter.comments AS comments, " \
-	"foodParameter.idPage AS idPage, " \
-	"foodParameter.main AS main " \
-	"FROM foodParameter " \
-	"LEFT JOIN foodContent ON foodContent.idParameter=foodParameter.id " \
-	"LEFT JOIN food ON food.id=foodContent.idFood " \
-	"LEFT JOIN foodIntake ON foodContent.idFood=foodIntake.idFood AND foodIntake.fiDate=:date AND foodIntake.id IN (:selected) " \
-	"LEFT JOIN unit ON foodParameter.idUnit=unit.id " \
-	"GROUP BY foodParameter.id " \
-	"ORDER BY IFNULL(foodParameter.idSuperParameter, foodParameter.id), foodParameter.idSuperParameter, foodParameter.name";
+    "foodParameter.idSuperParameter AS idParent, " \
+    "foodParameter.name AS name, " \
+    "foodParameter.targetMin AS targetMin, " \
+    "foodParameter.targetMax AS targetMax, " \
+    "SUM(foodContent.amount * foodIntake.amount / food.defaultAmount) AS amount, " \
+    "unit.shortName AS unitName, " \
+    "foodParameter.comments AS comments, " \
+    "foodParameter.idPage AS idPage, " \
+    "foodParameter.main AS main " \
+    "FROM foodParameter " \
+    "LEFT JOIN foodContent ON foodContent.idParameter=foodParameter.id " \
+    "LEFT JOIN food ON food.id=foodContent.idFood " \
+    "LEFT JOIN foodIntake ON foodContent.idFood=foodIntake.idFood AND foodIntake.fiDate=:date AND foodIntake.id IN (:selected) " \
+    "LEFT JOIN unit ON foodParameter.idUnit=unit.id " \
+    "GROUP BY foodParameter.id " \
+    "ORDER BY IFNULL(foodParameter.idSuperParameter, foodParameter.id), foodParameter.idSuperParameter, foodParameter.name";
 
 
 static const char SetOption[] = "INSERT OR REPLACE INTO options (key, value) VALUES (:key, :value)";
