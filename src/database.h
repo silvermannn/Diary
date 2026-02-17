@@ -27,7 +27,7 @@ public:
 	QStringList FetchUnitList();
 
 	IdToString fetchExList(bool All);
-	void fetchExInfo(int id, QStringList& paramNames, QStringList& paramUnits, QString& comment, QString& lastComment);
+    void fetchExInfo(int id, QStringList& paramNames, QStringList& paramUnits, QString& comment, QStringList &comments);
 	int addExecution(const QDate date, int idEx, double param0, double param1, double param2, const QString& comment);
 
     IdToString fetchParametersList(bool all);

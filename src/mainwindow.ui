@@ -74,7 +74,7 @@
     <item>
      <widget class="QTabWidget" name="tabsRegistered">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QSplitter" name="tabExercises">
        <property name="sizePolicy">

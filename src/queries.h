@@ -106,15 +106,16 @@ static const char SelectExList[] = "SELECT subExercise.id AS id, exercise.name |
   "WHERE exercise.active=1 AND (subExercise.active=1 OR subExercise.active=:active) " \
   "ORDER BY exercise.line, exercise.name, subExercise.name";
 static const char SelectExInfo[] = "SELECT paramsCount, param0Name, param1Name, param2Name," \
-  " u0.shortName AS unit0, u1.shortName AS unit1, u2.shortName AS unit2," \
-  " (exercise.comments || X'0A' || subExercise.comments) AS comments, " \
-  " (SELECT diary.comments FROM diary WHERE diary.idExercise=:id AND diary.comments IS NOT NULL ORDER BY diary.exDate DESC LIMIT 1) AS lastCcomments " \
-  "FROM exercise " \
-  "JOIN subExercise ON exercise.id=subExercise.idExercise " \
-  "LEFT JOIN unit AS u0 ON u0.id=subExercise.idUnit0 " \
-  "LEFT JOIN unit AS u1 ON u1.id=subExercise.idUnit1 " \
-  "LEFT JOIN unit AS u2 ON u2.id=subExercise.idUnit2 " \
-  "WHERE subExercise.id=:id";
+    " u0.shortName AS unit0, u1.shortName AS unit1, u2.shortName AS unit2," \
+    " (exercise.comments || X'0A' || subExercise.comments) AS comments, " \
+    " (SELECT diary.comments FROM diary WHERE diary.idExercise=:id AND diary.comments IS NOT NULL ORDER BY diary.exDate DESC LIMIT 1) AS lastCcomments " \
+    "FROM exercise " \
+    "JOIN subExercise ON exercise.id=subExercise.idExercise " \
+    "LEFT JOIN unit AS u0 ON u0.id=subExercise.idUnit0 " \
+    "LEFT JOIN unit AS u1 ON u1.id=subExercise.idUnit1 " \
+    "LEFT JOIN unit AS u2 ON u2.id=subExercise.idUnit2 " \
+    "WHERE subExercise.id=:id";
+static const char SelectExComments[] = "SELECT DISTINCT TRIM(diary.comments) FROM diary WHERE diary.idExercise=:id ORDER BY diary.exDate DESC LIMIT 50";
 
 static const char SelectDiaryDayExs[] = "SELECT subExercise.id AS id, exercise.name || ': ' || subExercise.name AS exerciseName, " \
   "GROUP_CONCAT((diary.param0 || CASE diary.param1 WHEN 0 THEN '' ELSE ('/' || diary.param1) END || CASE diary.param2 WHEN 0 THEN '' ELSE ('/' || diary.param2) END), '+') || ' ' || " \

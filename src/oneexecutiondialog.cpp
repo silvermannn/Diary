@@ -34,9 +34,9 @@ OneExecutionDialog::~OneExecutionDialog()
 void OneExecutionDialog::selectExercise(QListWidgetItem* item)
 {
 	int id = item->data(Qt::UserRole).toInt();
-	QStringList paramNames, paramUnits;
-	QString comment, lastComment;
-	_db.fetchExInfo(id, paramNames, paramUnits, comment, lastComment);
+    QStringList paramNames, paramUnits, comments;
+    QString comment;
+    _db.fetchExInfo(id, paramNames, paramUnits, comment, comments);
 
 	QTableWidget* params = findChild<QTableWidget*>("tableParams");
 	params->setRowCount(paramNames.count());
@@ -53,8 +53,10 @@ void OneExecutionDialog::selectExercise(QListWidgetItem* item)
 	QLabel* excomments = findChild<QLabel*>("labelComments");
 	excomments->setText(comment);
 
-	QPlainTextEdit* thisComment = findChild<QPlainTextEdit*>("textComment");
-	thisComment->setPlainText(lastComment);
+    QComboBox* thisComment = findChild<QComboBox*>("textComment");
+    thisComment->clear();
+    thisComment->addItems(comments);
+    //thisComment->setCurrentIndex(0);
 }
 
 void OneExecutionDialog::chkShowAllStateChanged(int)
@@ -113,7 +115,7 @@ void OneExecutionDialog::accept()
 		p3 = s.toDouble();
 	}
 
-	QPlainTextEdit* thisComment = findChild<QPlainTextEdit*>("textComment");
+    QComboBox* thisComment = findChild<QComboBox*>("textComment");
 
 	QLineEdit* numOfCopies = findChild<QLineEdit*>("NumOfCopies");
 	size_t n = numOfCopies->text().toUInt();
@@ -122,7 +124,7 @@ void OneExecutionDialog::accept()
 
 	for (size_t i = 0; i < n; ++i)
 	{
-		_db.addExecution(dateEdit->date(), id, p1, p2, p3, thisComment->toPlainText());
+        _db.addExecution(dateEdit->date(), id, p1, p2, p3, thisComment->currentText());
 	}
 
 	_db.commitTransaction();

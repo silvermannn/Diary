@@ -99,7 +99,7 @@ IdToString Database::fetchExList(bool all)
 	return result;
 }
 
-void Database::fetchExInfo(int id, QStringList &paramNames, QStringList &paramUnits, QString &comment, QString &lastComment)
+void Database::fetchExInfo(int id, QStringList &paramNames, QStringList &paramUnits, QString &comment, QStringList &comments)
 {
 	QSqlQuery query;
 	query.prepare(SelectExInfo);
@@ -114,8 +114,15 @@ void Database::fetchExInfo(int id, QStringList &paramNames, QStringList &paramUn
 			paramUnits << query.value(i + 4).toString();
 		}
 		comment = query.value(7).toString();
-		lastComment = query.value(8).toString();
 	}
+
+    query.prepare(SelectExComments);
+    query.bindValue(":id", id);
+    query.exec();
+    while(query.next())
+    {
+        comments.append(query.value(0).toString());
+    }
 }
 
 int Database::addExecution(const QDate date, int idEx, double param0, double param1, double param2, const QString &comment)
